@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head>
+<script src="./jquery-1.11.1.min.js"></script>
+</head><body>
+<b>iframe from another domain</b>
+<div id="test">Send me a message!</div>
+<div id="displayMsg">||     ||</div>
+<input type="text" id="msg" value="Enter message"></input>
+<input type="button" id="sendMessge" value="Send Messge"></input>
+<script>
+var ori= "";
+function listener(event){
+	ori = event.origin;
+	//if ( event.origin !== "http://javascript.info" )
+	//	return;
+
+	document.getElementById("test").innerHTML = "received: " + event.data;
+}
+
+if (window.addEventListener){
+	window.addEventListener("message", listener,false);
+} else {
+	window.attachEvent("onmessage", listener);
+}
+$("#sendMessge").on("click", function () {
+		var win = parent.window;
+		win.postMessage( $('#msg').val(), "https://dl.dropboxusercontent.com");
+	  }); 
+
+</script>
+
+
+
+</body></html>

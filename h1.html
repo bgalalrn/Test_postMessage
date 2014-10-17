@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Untitled Document</title>
+
+
+
+<script src="./jquery-1.11.1.min.js"></script>
+</head>
+
+<body>
+
+<div id="displayMsg">||     ||</div>
+<input type="text" id="msg" value="Enter message"></input>
+<input type="button" id="sendMessge" value="Send Messge"></input>
+<script type="text/javascript">
+	$('<iframe />', { id: 'myFrame', src: 'https://dl.dropboxusercontent.com/u/20182278/crossDomain_postMessage_test/h2.html' }).appendTo('body');
+	// Get reference to the iframe element
+	var iframe = $('#myFrame').get(0);
+	// Send message with {some: "data"} data
+	
+	function listener(event){
+		ori = event.origin;
+		//if ( event.origin !== "http://javascript.info" )
+		//	return;
+
+		document.getElementById("displayMsg").innerHTML = "received: " + event.data;
+	}
+
+	if (window.addEventListener){
+		window.addEventListener("message", listener,false);
+	} else {
+		window.attachEvent("onmessage", listener);
+	}
+	
+	
+	  
+	  $("#sendMessge").on("click", function () {
+		var win = document.getElementById("myFrame").contentWindow
+		win.postMessage( $('#msg').val(), "https://dl.dropboxusercontent.com");
+	  }); 
+	  
+	  
+	  
+	function serviceCall () {
+		this.acceptOrigin = "";
+		this.sendToOrigin="";
+		this.callback = null;
+		this.ifrm = $('<iframe />', { id: 'myFrame', src: '' }).appendTo('body').hide().get(0).contentWindow;
+		
+		this.listener = function (event) {
+			if ( event.origin !== this.acceptOrigin ) { return;}
+			this.callback(event.data);
+		};
+		
+		if (window.addEventListener){
+			window.addEventListener("message", listener,false);
+		} else {
+			window.attachEvent("onmessage", listener);
+		}
+
+	}
+	serviceCall.prototype.get = function (url, callback) {
+		this.callback = callback;
+		this.ifrm.postMessage(url,this.sendToOrigin);
+	}
+	
+	function seviceCallReceiver () {
+		this.acceptOrigin = "";
+		this.sendToOrigin="";
+		this.listener = function () {
+			if ( event.origin !== this.acceptOrigin ) { return;}
+			this.doAjaxCall(event.data, function (data) {
+				parent.window.postMessage(data, this.sendToOrigin);
+			})
+		};
+		this.doAjaxCall = function (url, callback) {
+		}
+		
+		if (window.addEventListener){
+			window.addEventListener("message", listener,false);
+		} else {
+			window.attachEvent("onmessage", listener);
+		}
+	}
+	  
+</script>
+
+</body>
+</html>
