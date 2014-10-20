@@ -11,6 +11,8 @@
 
 
 
+
+
 <script src="./jquery-1.11.1.min.js"></script>
 </head>
 
@@ -22,12 +24,13 @@
 <script type="text/javascript">
 	$('<iframe />', { id: 'myFrame', src: 'https://dl.dropboxusercontent.com/u/20182278/crossDomain_postMessage_test/h2.html' }).appendTo('body');
 	// Get reference to the iframe element
-	
+
 	// Added comment for testing...
-	
+	// Adding one more line of comment...
+
 	var iframe = $('#myFrame').get(0);
 	// Send message with {some: "data"} data
-	
+
 	function listener(event){
 		ori = event.origin;
 		//if ( event.origin !== "http://javascript.info" )
@@ -41,27 +44,27 @@
 	} else {
 		window.attachEvent("onmessage", listener);
 	}
-	
-	
-	  
+
+
+
 	  $("#sendMessge").on("click", function () {
 		var win = document.getElementById("myFrame").contentWindow
 		win.postMessage( $('#msg').val(), "https://dl.dropboxusercontent.com");
-	  }); 
-	  
-	  
-	  
+	  });
+
+
+
 	function serviceCall () {
 		this.acceptOrigin = "";
 		this.sendToOrigin="";
 		this.callback = null;
 		this.ifrm = $('<iframe />', { id: 'myFrame', src: '' }).appendTo('body').hide().get(0).contentWindow;
-		
+
 		this.listener = function (event) {
 			if ( event.origin !== this.acceptOrigin ) { return;}
 			this.callback(event.data);
 		};
-		
+
 		if (window.addEventListener){
 			window.addEventListener("message", listener,false);
 		} else {
@@ -73,7 +76,7 @@
 		this.callback = callback;
 		this.ifrm.postMessage(url,this.sendToOrigin);
 	}
-	
+
 	function seviceCallReceiver () {
 		this.acceptOrigin = "";
 		this.sendToOrigin="";
@@ -85,14 +88,14 @@
 		};
 		this.doAjaxCall = function (url, callback) {
 		}
-		
+
 		if (window.addEventListener){
 			window.addEventListener("message", listener,false);
 		} else {
 			window.attachEvent("onmessage", listener);
 		}
 	}
-	  
+
 </script>
 
 </body>
